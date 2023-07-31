@@ -18,30 +18,30 @@ from .forms import RoomForm
 # ]
 
 def loginPage(request):
-       page = 'login'
+    page = 'login'
        
-       if request.user.is_authenticated:
-             return redirect('home')
+    if request.user.is_authenticated:
+        return redirect('home')
        
-       if request.method == 'POST':
-            username = request.POST.get('username').lower()
-            password = request.POST.get('password')
+    if request.method == 'POST':
+        username = request.POST.get('username').lower()
+        password = request.POST.get('password')
 
-            try:
-                  user = User.objects.get(username=username)
-            except:
-                  messages.error(request, 'user does not exist')
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, 'user does not exist')
 
-            user = authenticate(request, username = username, password = password)
+        user = authenticate(request, username = username, password = password)
 
-            if user is not None:
-                  login(request,user)
-                  return redirect('home')
-            else:
-                  messages.error(request, 'Username or Password does not exist')
+        if user is not None:
+            login(request,user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Username or Password does not exist')
 
-       context = {'login':login}
-       return render(request, 'base/login_register.html',context)
+    context = {'page': page}
+    return render(request, 'base/login_register.html', context)
 
 def logoutUser(request):
       logout(request)
@@ -79,7 +79,7 @@ def home(request):
 
 def room(request, pk):
        room = Room.objects.get(id=pk)
-       room_messages = room.message_set.all().order_by('-created')
+       room_messages = room.message_set.all().order_by()
        context = {'room':room, 'room_messages':room_messages}          
        return render(request, 'base/room.html',context)
 
